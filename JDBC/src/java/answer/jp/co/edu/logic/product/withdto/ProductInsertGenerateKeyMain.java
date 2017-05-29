@@ -25,7 +25,6 @@ public class ProductInsertGenerateKeyMain {
 
     // テスト実行結果検証
     System.out.println(testResult + "件挿入しました");
-    System.out.println("新規自動採番ID：" + productDto.getId());
   }
 
 }

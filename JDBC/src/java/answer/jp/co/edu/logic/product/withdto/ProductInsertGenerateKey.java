@@ -18,36 +18,33 @@ public class ProductInsertGenerateKey {
     String password = "sqltest";
 
     String sql = "INSERT INTO product(id,category_id,name,weight)"
-                                    + "VALUES(NEXT VALUE for SEQ_PRODUCT_ID,?,?,?)";
+                            + "VALUES(NEXT VALUE for SEQ_PRODUCT_ID,?,?,?)";
 
     Connection connection = null;
     PreparedStatement preparedStatement = null;
     ResultSet resultSet = null;
 
-    // 自動採番列指定
-    String[] seqColumn = { "id" };
-
     try {
       Class.forName(className);
       connection = DriverManager.getConnection(url, user, password);
 
-      preparedStatement = connection.prepareStatement(sql, seqColumn);
+      // 第2引数に自動採番値を返す定数を指定
+      preparedStatement = connection.prepareStatement(sql,
+                                    PreparedStatement.RETURN_GENERATED_KEYS);
 
       preparedStatement.setLong(1, productDto.getCategoryId());
       preparedStatement.setString(2, productDto.getName());
       preparedStatement.setBigDecimal(3, productDto.getWeight());
 
-      int insertedRow = preparedStatement.executeUpdate();
+      int result = preparedStatement.executeUpdate();
 
       // 新規ID採番結果取得
       resultSet = preparedStatement.getGeneratedKeys();
       resultSet.next();
-      long newId = resultSet.getLong(1);
+      int newId = resultSet.getInt(1);
+    System.out.println("新規自動採番ID：" + newId);
 
-      // 引数DTOのIDに設定
-      productDto.setId(newId);
-
-      return insertedRow;
+      return result;
 
     } catch (ClassNotFoundException | SQLException e) {
       throw new SQLException("商品データ挿入エラーが発生しました。", e);
