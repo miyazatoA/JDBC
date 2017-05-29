@@ -9,8 +9,6 @@ import javax.naming.NamingException;
 
 import javax.sql.DataSource;
 
-// TODO BasicDataSourceがDerbyで適用できるか確認
-//import org.apache.commons.dbcp.BasicDataSource;
 public final class DBUtil {
 
     private static DataSource dataSource = null;
